@@ -1,37 +1,55 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "../api/axiosConfig"; // make sure this exists
 
 const Cart = ({ cart, setCart, clearCart }) => {
   const [visible, setVisible] = useState(true);
   const navigate = useNavigate();
 
-  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const total = cart.reduce(
+    (sum, item) => sum + item.resalePrice * item.quantity,
+    0
+  );
 
-  const increaseQty = (id) => {
+  const increaseQty = (_id) => {
     setCart(
       cart.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+        item._id === _id ? { ...item, quantity: item.quantity + 1 } : item
       )
     );
   };
 
-  const decreaseQty = (id) => {
+  const decreaseQty = (_id) => {
     setCart(
       cart
         .map((item) =>
-          item.id === id ? { ...item, quantity: item.quantity - 1 } : item
+          item._id === _id ? { ...item, quantity: item.quantity - 1 } : item
         )
         .filter((item) => item.quantity > 0)
     );
   };
 
-  const removeItem = (id) => {
-    setCart(cart.filter((item) => item.id !== id));
+  const removeItem = (_id) => {
+    setCart(cart.filter((item) => item._id !== _id));
   };
 
-  function goToProceed() {
-    navigate("/payment");
-  }
+  const goToProceed = async () => {
+    try {
+      const res = await axios.post("/orders", {
+        cartItems: cart,
+        totalAmount: total,
+      });
+  
+      // Store returned order ID (assuming your backend returns it as _id)
+      localStorage.setItem("latestOrderId", res.data.orderId);
+  
+      clearCart();
+      navigate("/payment");
+    } catch (error) {
+      alert("❌ Failed to place order: " + (error.response?.data?.message || error.message));
+    }
+  };
+  
 
   return (
     <>
@@ -66,26 +84,26 @@ const Cart = ({ cart, setCart, clearCart }) => {
           <ul className="space-y-3 mb-4">
             {cart.map((item) => (
               <li
-                key={item.id}
+                key={item._id}
                 className="bg-[#91C8E4] text-white px-3 py-2 rounded-2xl flex gap-3 items-center"
               >
                 <img
-                  src={item.image}
-                  alt={item.name}
+                  src={`http://localhost:5000${item.image}`} // Update if deployed
+                  alt={item.productName}
                   className="w-12 h-12 rounded object-cover"
                 />
                 <div className="flex-1">
-                  <p className="font-medium">{item.name}</p>
+                  <p className="font-medium">{item.productName}</p>
                   <div className="flex items-center gap-2 mt-1">
                     <button
-                      onClick={() => decreaseQty(item.id)}
+                      onClick={() => decreaseQty(item._id)}
                       className="!bg-[#749BC2] text-white w-6 h-6 text-sm rounded-full flex items-center justify-center"
                     >
                       −
                     </button>
                     <span className="text-sm">{item.quantity}</span>
                     <button
-                      onClick={() => increaseQty(item.id)}
+                      onClick={() => increaseQty(item._id)}
                       className="!bg-[#749BC2] text-white w-6 h-6 text-sm rounded-full flex items-center justify-center"
                     >
                       +
@@ -93,12 +111,12 @@ const Cart = ({ cart, setCart, clearCart }) => {
                   </div>
                 </div>
                 <div className="text-right">
-                  <p>Rs. {item.price * item.quantity}</p>
+                  <p>Rs. {item.resalePrice * item.quantity}</p>
                   <button
-                    onClick={() => removeItem(item.id)}
+                    onClick={() => removeItem(item._id)}
                     className="!bg-[#749BC2] text-white w-6 h-6 text-xs rounded-full flex items-center justify-center mt-2"
                   >
-                  X
+                    X
                   </button>
                 </div>
               </li>

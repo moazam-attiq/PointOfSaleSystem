@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import axios from "./api/axiosConfig";
+
 import InventoryDashboard from "./components/InventoryDashboard";
 import RefundHistory from "./components/RefundHistory";
 import SalesRecord from "./components/SalesRecord";
@@ -21,64 +23,64 @@ const menuItems = [
 ];
 
 // Dummy product data
-const products = [
-  {
-    id: 1,
-    name: "ItemName",
-    price: 123,
-    image:
-      "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
-  },
-  {
-    id: 2,
-    name: "ItemName",
-    price: 123,
-    image:
-      "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
-  },
-  {
-    id: 3,
-    name: "ItemName",
-    price: 123,
-    image:
-      "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
-  },
-  {
-    id: 4,
-    name: "ItemName",
-    price: 123,
-    image:
-      "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
-  },
-  {
-    id: 5,
-    name: "ItemName",
-    price: 123,
-    image:
-      "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
-  },
-  {
-    id: 6,
-    name: "ItemName",
-    price: 123,
-    image:
-      "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
-  },
-  {
-    id: 7,
-    name: "ItemName",
-    price: 123,
-    image:
-      "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
-  },
-  {
-    id: 8,
-    name: "ItemName",
-    price: 123,
-    image:
-      "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
-  },
-];
+// const products = [
+//   {
+//     id: 1,
+//     name: "ItemName",
+//     price: 123,
+//     image:
+//       "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
+//   },
+//   {
+//     id: 2,
+//     name: "ItemName",
+//     price: 123,
+//     image:
+//       "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
+//   },
+//   {
+//     id: 3,
+//     name: "ItemName",
+//     price: 123,
+//     image:
+//       "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
+//   },
+//   {
+//     id: 4,
+//     name: "ItemName",
+//     price: 123,
+//     image:
+//       "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
+//   },
+//   {
+//     id: 5,
+//     name: "ItemName",
+//     price: 123,
+//     image:
+//       "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
+//   },
+//   {
+//     id: 6,
+//     name: "ItemName",
+//     price: 123,
+//     image:
+//       "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
+//   },
+//   {
+//     id: 7,
+//     name: "ItemName",
+//     price: 123,
+//     image:
+//       "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
+//   },
+//   {
+//     id: 8,
+//     name: "ItemName",
+//     price: 123,
+//     image:
+//       "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
+//   },
+// ];
 
 export default function Dashboard() {
   // Load selected tab from localStorage or default to "products"
@@ -86,7 +88,8 @@ export default function Dashboard() {
     return localStorage.getItem("selectedTab") || "products";
   });
 
-
+  const [products, setProducts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [cart, setCart] = useState([]);
 
   // Save selected tab to localStorage
@@ -94,12 +97,33 @@ export default function Dashboard() {
     localStorage.setItem("selectedTab", selected);
   }, [selected]);
 
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await axios.get("/products"); // GET /api/products
+        setProducts(res.data); // response contains array of products
+      } catch (err) {
+        console.error("❌ Failed to fetch products:", err);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const handleSearch = (term) => {
+    setSearchTerm(term.toLowerCase());
+  };
+
+  const filteredProducts = products.filter((item) =>
+    item.productName.toLowerCase().includes(searchTerm)
+  );
+
   const addToCart = (product) => {
-    const existing = cart.find((item) => item.id === product.id);
+    const existing = cart.find((item) => item.id === product._id);
     if (existing) {
       setCart(
         cart.map((item) =>
-          item.id === product.id
+          item.id === product._id
             ? { ...item, quantity: item.quantity + 1 }
             : item
         )
@@ -108,7 +132,7 @@ export default function Dashboard() {
       setCart([...cart, { ...product, quantity: 1 }]);
     }
   };
-  
+
   const clearCart = () => setCart([]);
 
   return (
@@ -122,16 +146,15 @@ export default function Dashboard() {
             selected={selected}
             setSelected={setSelected}
             menuItems={menuItems}
-            />
+          />
         </div>
 
         <div className="flex-1 justify-between flex-wrap p-4 text-black bg-white">
           {selected === "products" && (
             <>
-              <SearchBar />
+              <SearchBar onSearch={handleSearch}/>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-
-                {products.map((product, index) => (
+                {filteredProducts.map((product, index) => (
                   <ProductCard
                     key={index}
                     product={product}

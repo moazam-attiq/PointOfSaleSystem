@@ -1,31 +1,75 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "../api/axiosConfig";
 import SearchBar from "./SearchBar";
-const inventoryData = [
-  { name: "ItemName", original: 123, resale: 321, sold: 0, earnings: 0, stock: 678, profit: 0 },
-  { name: "ItemName", original: 123, resale: 321, sold: 0, earnings: 0, stock: 678, profit: 0 },
-  { name: "ItemName", original: 123, resale: 321, sold: 0, earnings: 0, stock: 678, profit: 0 },
-  { name: "ItemName", original: 123, resale: 321, sold: 0, earnings: 0, stock: 678, profit: 0 },
-  { name: "ItemName", original: 123, resale: 321, sold: 0, earnings: 0, stock: 678, profit: 0 },
-];
 
 export default function InventoryDashboard() {
+  const [inventoryData, setInventoryData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
-  const goToEditProduct = () => {
-    navigate('/edit-product');
-  }
-  const goToAddProduct = () => {
-    navigate('/add-product');
-  }
+
+  useEffect(() => {
+    const fetchInventory = async () => {
+      try {
+        const res = await axios.get("/products/inventory");
+        setInventoryData(res.data);
+      } catch (err) {
+        console.error("❌ Failed to load inventory", err);
+      }
+    };
+
+    fetchInventory();
+  }, []);
+
+  const handleSearch = (term) => {
+    setSearchTerm(term.toLowerCase());
+  };
+
+  const resetSearch = () => {
+    setSearchTerm("");
+  };
+
+  const goToAddProduct = () => navigate("/add-product");
+
+  const filteredData = inventoryData.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm)
+  );
+
+  const handleDeleteProduct = async (productId) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this product?");
+    if (!confirmDelete) return;
+  
+    try {
+      await axios.delete(`/products/${productId}`);
+      setInventoryData(prev => prev.filter(item => item._id !== productId));
+      alert("✅ Product deleted successfully");
+    } catch (err) {
+      console.error("❌ Error deleting product:", err);
+      alert("❌ Failed to delete product");
+    }
+  };
+
   return (
     <div className="flex min-h-screen text-black">
       <main className="flex-1 bg-gray-50 p-6">
         {/* Search & Buttons */}
         <div className="justify-between items-center mb-4">
-          <SearchBar />          
-          <div className="flex gap-6">
-            <button style={{background:'#91C8E4'}} className=" px-6 py-6 text-sm font-extrabold rounded text-white bg-[#91C8E4]">All Inventory</button>
-            <button style={{background:'#91C8E4'}} className=" px-6 py-6 text-sm font-extrabold rounded text-white bg-[#91C8E4]" onClick={goToAddProduct}>Add Product</button>
+          <SearchBar onSearch={handleSearch} />
+          <div className="flex gap-6 mt-4">
+            <button
+              style={{ background: "#91C8E4" }}
+              className="px-6 py-2 text-sm font-extrabold rounded text-white"
+              onClick={resetSearch}
+            >
+              All Inventory
+            </button>
+            <button
+              style={{ background: "#91C8E4" }}
+              className="px-6 py-2 text-sm font-extrabold rounded text-white"
+              onClick={goToAddProduct}
+            >
+              Add Product
+            </button>
           </div>
         </div>
 
@@ -47,23 +91,29 @@ export default function InventoryDashboard() {
               </tr>
             </thead>
             <tbody className="bg-gray-100">
-              {inventoryData.map((item, index) => (
-                <tr key={index} className="hover:bg-gray-50">
+              {filteredData.map((item) => (
+                <tr key={item._id} className="hover:bg-gray-50">
                   <td className="p-2 border">{item.name}</td>
-                  <td className="p-2 border">{item.original.toFixed(2)}</td>
-                  <td className="p-2 border">{item.resale.toFixed(2)}</td>
+                  <td className="p-2 border">Rs. {item.original.toFixed(2)}</td>
+                  <td className="p-2 border">Rs. {item.resale.toFixed(2)}</td>
                   <td className="p-2 border">{item.sold}</td>
-                  <td className="p-2 border">{item.earnings.toFixed(2)}</td>
+                  <td className="p-2 border">Rs. {item.earnings.toFixed(2)}</td>
                   <td className="p-2 border">{item.stock}</td>
-                  <td className="p-2 border">{item.profit.toFixed(2)}</td>
-                  <td className="p-2 border space-x-2 flex justify-center items-center ">
-                    <button style={{background:'#91C8E4'}} className=" px-6 py-6 text-sm font-extrabold rounded text-white bg-[#91C8E4]"
-                    onClick={goToEditProduct}
+                  <td className="p-2 border">Rs. {item.profit.toFixed(2)}</td>
+                  <td className="p-2 border space-x-2 flex justify-center items-center">
+                    <button
+                      style={{ background: "#91C8E4" }}
+                      className="px-4 py-2 text-sm font-bold rounded text-white"
+                      onClick={() => navigate(`/edit-product?id=${item._id}`)}
                     >
-                      Edit Product
+                      Edit
                     </button>
-                    <button style={{background:'#91C8E4'}} className=" px-6 py-6 text-sm font-extrabold rounded text-white bg-[#91C8E4]">
-                      Delete Product
+                    <button
+                      style={{ background: "#91C8E4" }}
+                      className="px-4 py-2 text-sm font-bold rounded text-white"
+                      onClick={() => handleDeleteProduct(item._id)}
+                    >
+                      Delete
                     </button>
                   </td>
                 </tr>

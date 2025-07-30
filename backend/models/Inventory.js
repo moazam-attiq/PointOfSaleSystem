@@ -4,6 +4,7 @@ const InventorySchema = new mongoose.Schema({
   productName: { type: String, required: true },
   originalPrice: { type: Number, required: true },
   resalePrice: { type: Number, required: true },
+  image: { type: String, required: false }, // 🆕 optional image field
   profitMargin: {
     type: Number,
     get: function () {
@@ -16,4 +17,7 @@ const InventorySchema = new mongoose.Schema({
   stockQuantity: { type: Number, required: true }
 });
 
-module.exports = mongoose.model('Inventory', InventorySchema);
+// Enable getters in JSON output
+InventorySchema.set('toJSON', { getters: true });
+
+module.exports = mongoose.model("Product", InventorySchema, "products");
