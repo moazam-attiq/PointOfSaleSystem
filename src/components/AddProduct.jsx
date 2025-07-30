@@ -1,36 +1,48 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function AddProductForm() {
   const navigate = useNavigate();
   const goToHome = () => {
-    navigate('/Dashboard');
-  }
+    navigate("/Dashboard");
+  };
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#749BC2]">
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold text-gray-800">Add New Product</h2>
+          <h2 className="text-2xl font-semibold text-gray-800">
+            Add New Product
+          </h2>
           <button
             onClick={goToHome}
-            className="text-white bg-blue-500 w-10 h-10 text-2xl flex items-center justify-center rounded-full hover:bg-[#5a7aa1]"
+            className="!bg-white !text-[#749BC2] border-2 border-[#749BC2] w-12 h-12 flex items-center justify-center rounded-full transition-all duration-200 ease-in-out
+             hover:!text-black hover:!border-black active:!text-black active:!border-black focus:outline-none leading-none p-0"
           >
-            &times;
+            <span
+              className="text-[30px] leading-none flex items-center justify-center"
+              style={{ transform: "translateY(-1px)" }}
+            >
+              &times;
+            </span>
           </button>
         </div>
 
         <form className="space-y-4">
-          <div className=''>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Product Image</label>
+          <div className="">
+            <label className="block text-sm font-semibold text-gray-700 mb-1">
+              Product Image
+            </label>
             <input
-               placeholder='add a product image'
+              placeholder="add a product image"
               type="file"
               className="w-full px-3 py-2 border border-black rounded-lg bg-white file:mr-4 file:py-2 file:px-4 file:border-0 file:rounded-lg file:bg-orange-100 file:text-orange-700 hover:file:bg-orange-200 placeholder-gray-400"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-semibold  text-gray-700 mb-1">Product Name</label>
+            <label className="block text-sm font-semibold  text-gray-700 mb-1">
+              Product Name
+            </label>
             <input
               type="text"
               placeholder="Enter product name"
@@ -39,7 +51,9 @@ export default function AddProductForm() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Original Price</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">
+              Original Price
+            </label>
             <input
               type="text"
               placeholder="Enter original price"
@@ -48,7 +62,9 @@ export default function AddProductForm() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Resale Price</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">
+              Resale Price
+            </label>
             <input
               type="text"
               placeholder="Enter resale price"
@@ -57,7 +73,9 @@ export default function AddProductForm() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Quantity</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">
+              Quantity
+            </label>
             <input
               type="text"
               placeholder="Enter quantity"
@@ -68,8 +86,7 @@ export default function AddProductForm() {
           <button
             type="submit"
             className="w-full py-2 font-semibold text-white rounded-lg bg-gradient-to-r from-pink-500 to-yellow-400 hover:from-pink-600 hover:to-yellow-500"
-            style={{background:'#749BC2'}}
-
+            style={{ background: "#749BC2" }}
           >
             Add Product
           </button>
