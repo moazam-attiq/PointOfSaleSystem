@@ -23,48 +23,56 @@ const menuItems = [
 // Dummy product data
 const products = [
   {
+    id: 1,
     name: "ItemName",
     price: 123,
     image:
       "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
   },
   {
+    id: 2,
     name: "ItemName",
     price: 123,
     image:
       "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
   },
   {
+    id: 3,
     name: "ItemName",
     price: 123,
     image:
       "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
   },
   {
+    id: 4,
     name: "ItemName",
     price: 123,
     image:
       "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
   },
   {
+    id: 5,
     name: "ItemName",
     price: 123,
     image:
       "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
   },
   {
+    id: 6,
     name: "ItemName",
     price: 123,
     image:
       "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
   },
   {
+    id: 7,
     name: "ItemName",
     price: 123,
     image:
       "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
   },
   {
+    id: 8,
     name: "ItemName",
     price: 123,
     image:
@@ -78,6 +86,7 @@ export default function Dashboard() {
     return localStorage.getItem("selectedTab") || "products";
   });
 
+
   const [cart, setCart] = useState([]);
 
   // Save selected tab to localStorage
@@ -85,25 +94,43 @@ export default function Dashboard() {
     localStorage.setItem("selectedTab", selected);
   }, [selected]);
 
-  const addToCart = (product) => setCart([...cart, product]);
-
+  const addToCart = (product) => {
+    const existing = cart.find((item) => item.id === product.id);
+    if (existing) {
+      setCart(
+        cart.map((item) =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        )
+      );
+    } else {
+      setCart([...cart, { ...product, quantity: 1 }]);
+    }
+  };
+  
   const clearCart = () => setCart([]);
 
   return (
     <div className="flex flex-col h-full bg-white">
-      <Header />
+      <div className="sticky top-0 z-50">
+        <Header />
+      </div>
       <div className="flex flex-1">
-        <Sidebar
-          selected={selected}
-          setSelected={setSelected}
-          menuItems={menuItems}
-        />
+        <div className="sticky top-15 h-[calc(100vh-4rem)]">
+          <Sidebar
+            selected={selected}
+            setSelected={setSelected}
+            menuItems={menuItems}
+            />
+        </div>
 
         <div className="flex-1 justify-between flex-wrap p-4 text-black bg-white">
           {selected === "products" && (
             <>
               <SearchBar />
-              <div className="flex justify-between flex-wrap">
+              <div className="grid grid-cols-4 gap-4">
+
                 {products.map((product, index) => (
                   <ProductCard
                     key={index}
@@ -124,7 +151,7 @@ export default function Dashboard() {
         </div>
 
         {selected === "products" && (
-          <Cart cart={cart} clearCart={clearCart} />
+          <Cart cart={cart} setCart={setCart} clearCart={clearCart} />
         )}
       </div>
     </div>
