@@ -1,0 +1,7 @@
+f- #FFFBDE
+t- #91C8E4
+s- #749BC2
+p- #4682A9
+
+
+input -  bg-gray-200 py-4 px-8 
