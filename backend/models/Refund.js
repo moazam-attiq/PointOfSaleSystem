@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 const RefundSchema = new mongoose.Schema({
-  refundId: { type: String, required: true, unique: true },
   orderId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Order",

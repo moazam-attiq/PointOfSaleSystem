@@ -54,7 +54,7 @@ export default function InventoryDashboard() {
       <main className="flex-1 bg-gray-50 p-6">
         {/* Search & Buttons */}
         <div className="justify-between items-center mb-4">
-          <SearchBar onSearch={handleSearch} />
+          <SearchBar searchText="Search the Product..." onSearch={handleSearch} />
           <div className="flex gap-6 mt-4">
             <button
               style={{ background: "#91C8E4" }}

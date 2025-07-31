@@ -152,7 +152,7 @@ export default function Dashboard() {
         <div className="flex-1 justify-between flex-wrap p-4 text-black bg-white">
           {selected === "products" && (
             <>
-              <SearchBar onSearch={handleSearch}/>
+              <SearchBar searchText="Search the Product..." onSearch={handleSearch}/>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {filteredProducts.map((product, index) => (
                   <ProductCard

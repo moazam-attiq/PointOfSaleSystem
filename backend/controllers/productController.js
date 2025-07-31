@@ -2,6 +2,8 @@
 
 const Product = require("../models/Inventory");
 const Order = require("../models/Order");
+const path = require("path");
+const fs = require("fs").promises; // use promises version for await
 
 const createProduct = async (req, res) => {
   try {
@@ -93,7 +95,7 @@ const updateProductById = async (req, res) => {
     }
 
     // Update editable fields
-    existingProduct.name = productName || existingProduct.name;
+    existingProduct.productName = productName || existingProduct.name;
     existingProduct.originalPrice =
       originalPrice ?? existingProduct.originalPrice;
     existingProduct.resalePrice = resalePrice ?? existingProduct.resalePrice;
@@ -118,11 +120,26 @@ const deleteProductById = async (req, res) => {
     if (!deleted) {
       return res.status(404).json({ message: "Product not found" });
     }
+
+    if (deleted.image) {
+      const fileName = path.basename(deleted.image); // ensures just the file name
+      const imagePath = path.join(__dirname, "..", "uploads", fileName); // backend/uploads
+
+      try {
+        await fs.unlink(imagePath);
+        console.log("🗑️ Image deleted:", imagePath);
+      } catch (err) {
+        console.error("⚠️ Failed to delete image:", err.message);
+        // don't return error here, just log
+      }
+    }
+
     res.status(200).json({ message: "Product deleted successfully" });
   } catch (err) {
     res.status(500).json({ message: "Failed to delete product", error: err.message });
   }
 };
+
 
 const getInventoryStatus = async (req, res) => {
   try {

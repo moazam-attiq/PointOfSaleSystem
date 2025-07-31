@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 
 
-export default function SearchBar({onSearch}) {
+export default function SearchBar({onSearch, searchText}) {
   const [term, setTerm] = useState("");
 
   const handleChange = (e) => {
@@ -14,7 +14,7 @@ export default function SearchBar({onSearch}) {
     <div className="p-4">
       <input
         type="text"
-        placeholder="Search the Products..."
+        placeholder={searchText}
         className="rounded-2xl w-full bg-gray-200 py-4 px-8 text-gray-600 focus:outline-[#91C8E4]"
         value={term}
         onChange={handleChange}

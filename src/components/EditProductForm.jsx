@@ -32,6 +32,10 @@ export default function EditProductForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!product) return;
+    if (!product.productName.trim()) {
+      alert("❌ Product name cannot be empty");
+      return;
+    }
 
     if (addedStock < 0) {
       alert("❌ Failed to update product. Enter valid stock!");
@@ -87,7 +91,7 @@ export default function EditProductForm() {
             <input
               type="text"
               value={product.productName}
-              onChange={(e) => setProduct({ ...product, name: e.target.value })}
+              onChange={(e) => setProduct({ ...product, productName: e.target.value })}
               className="w-full px-4 py-2 border border-black rounded-lg"
             />
           </div>

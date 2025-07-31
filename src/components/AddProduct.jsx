@@ -79,7 +79,7 @@ export default function AddProductForm() {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 text-black">
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">
               Product Image (Not yet uploaded)

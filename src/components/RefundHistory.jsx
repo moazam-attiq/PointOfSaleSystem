@@ -15,7 +15,7 @@ const refundData = [
       <main className="flex-1 bg-gray-50 p-6">
         {/* Search & Buttons */}
         <div className="justify-between items-center mb-4">
-          <SearchBar />
+          <SearchBar searchText="Search the Customer..."/>
         </div>
 
         {/* Table */}

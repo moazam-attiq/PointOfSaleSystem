@@ -59,7 +59,7 @@ const Receipt = () => {
         </div>
 
         <div className="mb-4 space-y-1 text-xs sm:text-sm">
-          <p><strong>Invoice No:</strong> # {order.orderNumber?.slice(-5)}</p>
+          <p><strong>Invoice No:</strong> # {order.orderNumber?.slice(-14)}</p>
           <p><strong>Date:</strong> {new Date(order.date).toLocaleString()}</p>
           <p><strong>Cashier:</strong> Admin</p>
           <p><strong>Customer Name:</strong> {payment.customerName}</p>
