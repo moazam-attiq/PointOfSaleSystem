@@ -57,7 +57,7 @@ const getSalesRecord = async (req, res) => {
       return {
         orderId: order._id,
         orderNumber: order.orderNumber,
-        date: payment?.paymentDate.toLocaleDateString() || "N/A",
+        date: payment?.paymentDate.toLocaleDateString("en-US") || "N/A",
         customerName: payment?.customerName || "N/A",
         contact: payment?.mobileNumber || "N/A",
         totalAmount: payment?.billAmount || 0,

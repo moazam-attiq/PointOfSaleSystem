@@ -75,12 +75,43 @@ const searchCustomer = async (req, res) => {
 // 2. Get order details by orderId
 const getOrderById = async (req, res) => {
   try {
+    const orderId = req.params.orderId;
+
+    // Check if refund already exists
+    const existingRefund = await Refund.findOne({ orderId });
+    if (existingRefund) {
+      return res.status(409).json({ message: "This order has already been refunded." });
+    }
     const order = await Order.findById(req.params.orderId);
     if (!order) return res.status(404).json({ message: "Order not found" });
-    res.json(order);
+    const payment = await Payment.findOne({orderId});
+    if (!payment) return res.status(404).json({ message: "Payment not found" });
+
+    const response = {
+      ...order.toObject(),
+      mobileNumber: payment.mobileNumber,
+      customerName: payment.customerName,
+    };
+    res.json(response);
   } catch (err) {
     res.status(500).json({ message: "Error fetching order" });
   }
 };
 
-module.exports = { createRefund, getAllRefunds, searchCustomer, getOrderById };
+const getRefundById = async (req, res) => {
+  try {
+    const refund = await Refund.findById(req.params.id)
+      .populate("orderId")
+      .populate("refundedItems.productId");
+
+    if (!refund) return res.status(404).json({ message: "Refund not found" });
+
+    res.json(refund);
+  } catch (err) {
+    console.error("Error fetching refund by ID:", err);
+    res.status(500).json({ message: "Error fetching refund" });
+  }
+};
+
+
+module.exports = { createRefund, getAllRefunds, searchCustomer, getOrderById, getRefundById };

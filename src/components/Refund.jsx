@@ -34,6 +34,7 @@
     const handleSelect = async (orderId) => {
       try {
         const res = await axios.get(`/refunds/payment/${orderId}`);
+
         setSelectedOrder(res.data);
         setRefundedCartItems(
           res.data.cartItems.map((item) => ({
@@ -46,7 +47,12 @@
         setSuggestions([]);
         setSearchTerm(res.data.customerName ?? searchTerm);
       } catch (err) {
-        console.error("Error fetching order data:", err);
+        if (err.response && err.response.status === 409) {
+          alert("❌ This order has already been refunded.");
+        } else {
+          console.error("Error fetching order data:", err);
+          alert("❌ Failed to fetch order data");
+        }
       }
     };
 

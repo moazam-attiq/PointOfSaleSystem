@@ -2,19 +2,26 @@ import React, { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axiosConfig";
+import Loading from "./Loading";
+import EmptyState from "./EmptyState";
 
 export default function Alerts() {
   const [lowStockProducts, setLowStockProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchLowStock = async () => {
       try {
         const res = await axios.get("/products/inventory");
-        const filtered = res.data.filter((product) => product.stock < 10).sort((a,b) => a.stock - b.stock); // adjust field if needed
+        const filtered = res.data
+          .filter((product) => product.stock < 10)
+          .sort((a, b) => a.stock - b.stock);
         setLowStockProducts(filtered);
       } catch (err) {
         console.error("❌ Failed to fetch low-stock products:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -51,13 +58,18 @@ export default function Alerts() {
       <h2 className="text-2xl font-bold mb-4 text-red-600">
         ⚠️ Low Stock Alerts
       </h2>
-      {lowStockProducts.length === 0 ? (
-        <p className="text-green-700">✅ All products have sufficient stock.</p>
+
+      {loading ? (
+        <Loading message="Checking inventory levels..." />
+      ) : lowStockProducts.length === 0 ? (
+        <EmptyState message="✅ All products have sufficient stock." />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {lowStockProducts.map((product, index) => (
             <div key={index} className="relative">
-              <div className="absolute top-2 right-2 z-10">{getBadge(product.stock)}</div>
+              <div className="absolute top-2 right-2 z-10">
+                {getBadge(product.stock)}
+              </div>
               <ProductCard
                 product={{
                   productName: product.name,

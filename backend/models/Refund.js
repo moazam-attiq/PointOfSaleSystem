@@ -10,7 +10,7 @@ const RefundSchema = new mongoose.Schema({
     {
       productId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Inventory",
+        ref: "Product",
         required: true,
       },
       quantity: { type: Number, required: true },

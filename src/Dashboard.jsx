@@ -11,8 +11,8 @@ import Sidebar from "./components/Sidebar";
 import ProductCard from "./components/ProductCard";
 import SearchBar from "./components/SearchBar";
 import Cart from "./components/Cart";
+import Loading from "./components/Loading"; // ✅ import loading
 
-// Menu items with string keys
 const menuItems = [
   { label: "Products", key: "products" },
   { label: "Inventory", key: "inventory" },
@@ -22,68 +22,7 @@ const menuItems = [
   { label: "Refund History", key: "refundHistory" },
 ];
 
-// Dummy product data
-// const products = [
-//   {
-//     id: 1,
-//     name: "ItemName",
-//     price: 123,
-//     image:
-//       "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
-//   },
-//   {
-//     id: 2,
-//     name: "ItemName",
-//     price: 123,
-//     image:
-//       "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
-//   },
-//   {
-//     id: 3,
-//     name: "ItemName",
-//     price: 123,
-//     image:
-//       "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
-//   },
-//   {
-//     id: 4,
-//     name: "ItemName",
-//     price: 123,
-//     image:
-//       "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
-//   },
-//   {
-//     id: 5,
-//     name: "ItemName",
-//     price: 123,
-//     image:
-//       "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
-//   },
-//   {
-//     id: 6,
-//     name: "ItemName",
-//     price: 123,
-//     image:
-//       "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
-//   },
-//   {
-//     id: 7,
-//     name: "ItemName",
-//     price: 123,
-//     image:
-//       "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
-//   },
-//   {
-//     id: 8,
-//     name: "ItemName",
-//     price: 123,
-//     image:
-//       "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg",
-//   },
-// ];
-
 export default function Dashboard() {
-  // Load selected tab from localStorage or default to "products"
   const [selected, setSelected] = useState(() => {
     return localStorage.getItem("selectedTab") || "products";
   });
@@ -91,8 +30,8 @@ export default function Dashboard() {
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [cart, setCart] = useState([]);
+  const [loading, setLoading] = useState(true); // ✅ loading state
 
-  // Save selected tab to localStorage
   useEffect(() => {
     localStorage.setItem("selectedTab", selected);
   }, [selected]);
@@ -100,10 +39,12 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get("/products"); // GET /api/products
-        setProducts(res.data); // response contains array of products
+        const res = await axios.get("/products");
+        setProducts(res.data);
       } catch (err) {
         console.error("❌ Failed to fetch products:", err);
+      } finally {
+        setLoading(false); // ✅ hide loading whether success or error
       }
     };
 
@@ -152,17 +93,30 @@ export default function Dashboard() {
         <div className="flex-1 justify-between flex-wrap p-4 text-black bg-white">
           {selected === "products" && (
             <>
-              <SearchBar searchText="Search the Product..." onSearch={handleSearch}/>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {filteredProducts.map((product, index) => (
-                  <ProductCard
-                    key={index}
-                    product={product}
-                    buttonText="Add to Cart"
-                    onButtonClick={addToCart}
+              {loading ? (
+                <Loading message="Loading products..." /> // ✅ show loading here
+              ) : (
+                <>
+                  <SearchBar
+                    searchText="Search the Product..."
+                    onSearch={handleSearch}
                   />
-                ))}
-              </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {filteredProducts.length === 0 ? (
+                      <EmptyState message="No products match your search." />
+                    ) : (
+                      filteredProducts.map((product, index) => (
+                        <ProductCard
+                          key={index}
+                          product={product}
+                          buttonText="Add to Cart"
+                          onButtonClick={addToCart}
+                        />
+                      ))
+                    )}
+                  </div>
+                </>
+              )}
             </>
           )}
 
@@ -173,7 +127,7 @@ export default function Dashboard() {
           {selected === "refundHistory" && <RefundHistory />}
         </div>
 
-        {selected === "products" && (
+        {selected === "products" && !loading && (
           <Cart cart={cart} setCart={setCart} clearCart={clearCart} />
         )}
       </div>

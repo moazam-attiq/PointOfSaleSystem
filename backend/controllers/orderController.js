@@ -1,4 +1,5 @@
 const Order = require('../models/Order');
+const Product = require('../models/Inventory');
 
 // Helper: Generate a unique order number
 const generateOrderNumber = () => {
@@ -33,6 +34,24 @@ const createOrder = async (req, res) => {
     });
 
     const savedOrder = await newOrder.save();
+
+    for (const item of cleanedItems) {
+      const product = await Product.findById(item.productId);
+
+      if (!product) {
+        console.warn(`⚠️ Product not found: ${item.productId}`);
+        continue;
+      }
+
+      if (product.stockQuantity < item.quantity) {
+        return res.status(400).json({
+          message: `Insufficient stock for ${product.productName}. Available: ${product.stock}, Requested: ${item.quantity}`,
+        });
+      }
+
+      product.stockQuantity -= item.quantity;
+      await product.save();
+    }
 
     // Send back order ID to use for payments
     res.status(201).json({
