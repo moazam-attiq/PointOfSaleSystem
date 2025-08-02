@@ -8,6 +8,7 @@ import { useToast } from "../context/ToastContext";
 import DeleteModal from "./DeleteModal";
 
 export default function InventoryDashboard() {
+  const [selectedProductId, setSelectedProductId] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [inventoryData, setInventoryData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -136,19 +137,20 @@ export default function InventoryDashboard() {
                           <button
                             style={{ background: "#91C8E4" }}
                             className="px-4 py-2 text-sm font-bold rounded text-white"
-                            onClick={() => setShowModal(true)}
+                            onClick={() => {setShowModal(true) 
+                              setSelectedProductId(item._id)}}
                           >
                             Delete
                           </button>
-                          <DeleteModal
-                          show={showModal}
-                          onClose={() => setShowModal(false)}
-                          onConfirm={() => handleDeleteProduct(item._id)}
-                          />
                         </td>
                       </tr>
                     ))
-                  )}
+                    )}
+                    <DeleteModal
+                    show={showModal}
+                    onClose={() => setShowModal(false)}
+                    onConfirm={() => handleDeleteProduct(selectedProductId)}
+                    />
                 </tbody>
               </table>
             </div>
