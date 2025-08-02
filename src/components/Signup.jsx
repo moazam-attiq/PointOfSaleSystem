@@ -1,23 +1,33 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "../api/axiosConfig";
 
 export default function Signup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const goToProfile = () => {
     navigate("/admin-profile");
   };
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
-    // Placeholder for backend logic
-    console.log("Name:", name);
-    console.log("Email:", email);
-    console.log("Password:", password);
-    navigate("/login"); // Redirect to login after signup
+    try {
+      const { data } = await axios.post("/users/register", {
+        name,
+        email,
+        password,
+      });
+
+      alert("New Employee was registered successfully!");
+      navigate("/admin-profile");
+    } catch (err) {
+      console.error("Signup Failed:", err.response?.data?.message || err.message);
+      setError(err.response?.data?.message || "Signup failed. Please try again.");
+    }
   };
 
   return (
@@ -30,16 +40,16 @@ export default function Signup() {
           <button
             onClick={goToProfile}
             className="!bg-white !text-[#749BC2] !border-2 border-[#749BC2] w-12 h-12 !flex !items-center !justify-center !rounded-full transition-all duration-200 ease-in-out
-          hover:!text-black hover:!border-black active:!text-black active:!border-black focus:!outline-none !leading-none !p-0"
+            hover:!text-black hover:!border-black active:!text-black active:!border-black focus:!outline-none !leading-none !p-0"
           >
-            <span
-              className="text-[38px]"
-              style={{ transform: "translateY(-3px)" }}
-            >
+            <span className="text-[38px]" style={{ transform: "translateY(-3px)" }}>
               &times;
             </span>
           </button>
         </div>
+
+        {error && <p className="text-red-600 mb-4">{error}</p>}
+
         <form onSubmit={handleSignup}>
           <div className="mb-4">
             <label className="block text-gray-700 mb-1" htmlFor="name">
