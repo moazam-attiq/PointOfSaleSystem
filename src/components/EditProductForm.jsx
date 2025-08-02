@@ -47,7 +47,6 @@ export default function EditProductForm() {
       resalePrice: product.resalePrice,
       stock: parseInt(addedStock, 10),
     };
-    
 
     try {
       await axios.put(`/products/${product._id}`, updatedProduct);
@@ -59,7 +58,9 @@ export default function EditProductForm() {
   };
 
   if (!product) {
-    return <p className="text-white text-center mt-10">⏳ Loading product data...</p>;
+    return (
+      <p className="text-white text-center mt-10">⏳ Loading product data...</p>
+    );
   }
 
   return (
@@ -69,15 +70,23 @@ export default function EditProductForm() {
           <h2 className="text-2xl font-semibold text-gray-800">Edit Product</h2>
           <button
             onClick={goToHome}
-            className="!bg-white !text-[#749BC2] border-2 border-[#749BC2] w-12 h-12 flex items-center justify-center rounded-full hover:!text-black hover:!border-black"
+            className="!bg-white !text-[#749BC2] !border-2 border-[#749BC2] w-12 h-12 flex items-center justify-center !rounded-full transition-all duration-200 ease-in-out
+             hover:!text-black hover:!border-black active:!text-black active:!border-black focus:outline-none leading-none p-0"
           >
-            <span className="text-[30px]">&times;</span>
+            <span
+              className="text-[38px]"
+              style={{ transform: "translateY(-3px)" }}
+            >
+              &times;
+            </span>
           </button>
         </div>
 
         <form className="space-y-4 text-black" onSubmit={handleSubmit}>
           <div>
-            <label className="block text-sm font-semibold mb-1">Product Id:</label>
+            <label className="block text-sm font-semibold mb-1">
+              Product Id:
+            </label>
             <input
               type="text"
               value={product._id}
@@ -87,41 +96,57 @@ export default function EditProductForm() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold mb-1">Product Name:</label>
+            <label className="block text-sm font-semibold mb-1">
+              Product Name:
+            </label>
             <input
               type="text"
               value={product.productName}
-              onChange={(e) => setProduct({ ...product, productName: e.target.value })}
+              onChange={(e) =>
+                setProduct({ ...product, productName: e.target.value })
+              }
               className="w-full px-4 py-2 border border-black rounded-lg"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-semibold mb-1">Original Price:</label>
+            <label className="block text-sm font-semibold mb-1">
+              Original Price:
+            </label>
             <input
               type="number"
               value={product.originalPrice}
               onChange={(e) =>
-                setProduct({ ...product, originalPrice: parseFloat(e.target.value) })
+                setProduct({
+                  ...product,
+                  originalPrice: parseFloat(e.target.value),
+                })
               }
               className="w-full px-4 py-2 border border-black rounded-lg"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-semibold mb-1">Resale Price:</label>
+            <label className="block text-sm font-semibold mb-1">
+              Resale Price:
+            </label>
             <input
               type="number"
               value={product.resalePrice}
               onChange={(e) =>
-                setProduct({ ...product, resalePrice: parseFloat(e.target.value) })
+                setProduct({
+                  ...product,
+                  resalePrice: parseFloat(e.target.value),
+                })
               }
               className="w-full px-4 py-2 border border-black rounded-lg"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-semibold mb-1">Add Quantity in Stock:</label>
+            <label className="block text-sm font-semibold mb-1">
+              Add Quantity in Stock:
+            </label>
             <input
               type="number"
               value={addedStock}

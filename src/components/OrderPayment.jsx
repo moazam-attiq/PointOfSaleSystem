@@ -57,7 +57,10 @@ const OrderPayment = () => {
       alert("✅ Payment successful!");
       navigate("/receipt");
     } catch (err) {
-      alert("❌ Failed to record payment: " + (err.response?.data?.message || err.message));
+      alert(
+        "❌ Failed to record payment: " +
+          (err.response?.data?.message || err.message)
+      );
     }
   };
 
@@ -72,9 +75,12 @@ const OrderPayment = () => {
           <h2 className="text-xl font-semibold mb-4">Order Payment</h2>
           <button
             onClick={goToHome}
-            className="!bg-white !text-[#749BC2] border-2 border-[#749BC2] w-12 h-12 flex items-center justify-center rounded-full transition-all duration-200 ease-in-out hover:!text-black hover:!border-black active:!text-black active:!border-black focus:outline-none leading-none p-0"
+            className="!bg-white !text-[#749BC2] !border-2 border-[#749BC2] w-12 h-12 flex items-center justify-center !rounded-full transition-all duration-200 ease-in-out hover:!text-black hover:!border-black active:!text-black active:!border-black focus:outline-none leading-none p-0"
           >
-            <span className="text-[30px] leading-none" style={{ transform: "translateY(-1px)" }}>
+            <span
+              className="text-[38px] leading-none"
+              style={{ transform: "translateY(-3px)" }}
+            >
               &times;
             </span>
           </button>
@@ -97,7 +103,9 @@ const OrderPayment = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Customer Name</label>
+            <label className="block text-sm font-medium mb-1">
+              Customer Name
+            </label>
             <input
               type="text"
               value={customerName}
@@ -109,25 +117,50 @@ const OrderPayment = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Mobile Number</label>
+            <label className="block text-sm font-medium mb-1">
+              Mobile Number
+            </label>
             <input
-              type="tel"
+              type="text"
+              inputMode="numeric"
+              pattern="0-9"
               value={mobileNumber}
-              onChange={(e) => setMobileNumber(e.target.value)}
-              placeholder="Enter mobile number"
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none"
+              onChange={(e) => {
+                const value = e.target.value;
+                if (/^\d*$/.test(value)) {
+                  setMobileNumber(value);
+                }
+              }}
+              onBlur={() => {
+                if (mobileNumber.length !== 11) {
+                  alert("Please enter a valid mobile number");
+                  setMobileNumber();
+                }
+              }}
+              placeholder="Enter customer mobile number"
+              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none appearance-none"
+              maxLength={11}
+              minLength={11}
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Amount Received</label>
+            <label className="block text-sm font-medium mb-1">
+              Amount Received
+            </label>
             <input
-              type="number"
+              type="text"
+              inputMode="numeric"
               value={amountReceived}
-              onChange={(e) => setAmountReceived(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (/^\d*$/.test(value)) {
+                  setAmountReceived(value);
+                }
+              }}
               placeholder="Enter amount paid by customer"
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none"
+              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none appearance-none"
               required
             />
           </div>

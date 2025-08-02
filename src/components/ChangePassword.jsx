@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export default function ChangePassword() {
-  const [email, setEmail] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [oldPassword,setOLdPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [oldPassword, setOLdPassword] = useState("");
 
   const navigate = useNavigate();
-
 
   const handleReset = (e) => {
     e.preventDefault();
@@ -17,19 +16,33 @@ export default function ChangePassword() {
       alert("Passwords do not match");
       return;
     }
-    navigate('/')
+    navigate("/");
   };
 
-  const handleReturnHome = () => {
-    // Redirect to home page or handle as needed
-    // console.log('Returning to home...');
-    navigate('/dashboard')
+  const goToProfile = () => {
+    navigate("/admin-profile");
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#749BC2] text-black">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Change Password</h2>
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-center  text-gray-800">
+            Change Password
+          </h2>
+          <button
+            onClick={goToProfile}
+            className="!bg-white !text-[#749BC2] !border-2 border-[#749BC2] w-12 h-12 !flex !items-center !justify-center !rounded-full transition-all duration-200 ease-in-out
+          hover:!text-black hover:!border-black active:!text-black active:!border-black focus:!outline-none !leading-none !p-0"
+          >
+            <span
+              className="text-[38px]"
+              style={{ transform: "translateY(-3px)" }}
+            >
+              &times;
+            </span>
+          </button>
+        </div>
         <form onSubmit={handleReset}>
           <div className="mb-4">
             <label className="block text-gray-700 mb-1">Email</label>
@@ -44,7 +57,9 @@ export default function ChangePassword() {
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-700 mb-1">Enter Old Password</label>
+            <label className="block text-gray-700 mb-1">
+              Enter Old Password
+            </label>
             <input
               type="password"
               placeholder="Enter new password"
@@ -82,20 +97,9 @@ export default function ChangePassword() {
           <button
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition mb-3"
-            style={{background:'#749BC2'}}
-
+            style={{ background: "#749BC2" }}
           >
             Change Password
-          </button>
-
-          <button
-            type="button"
-            onClick={handleReturnHome}
-            className="w-full bg-gray-300 text-white py-2 rounded-md hover:bg-gray-400 transition"
-            style={{background:'#749BC2'}}
-
-          >
-            Return Home
           </button>
         </form>
       </div>

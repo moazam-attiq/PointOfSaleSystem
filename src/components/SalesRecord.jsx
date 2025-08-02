@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Loading from "./Loading";
 import EmptyState from "./EmptyState";
 
-function SalesRecord() {
+ export default function SalesRecord() {
   const [salesData, setSalesData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
@@ -44,15 +44,15 @@ function SalesRecord() {
   return (
     <div className="flex min-h-screen text-black">
       <main className="flex-1 bg-gray-50 p-6">
-        {/* Always show search bar */}
-        <div className="justify-between items-center mb-4">
-          <SearchBar
-            searchText="Search the Customer..."
-            onSearch={handleSearch}
-          />
-        </div>
+        {!loading && (
+          <div className="justify-between items-center mb-4">
+            <SearchBar
+              searchText="Search the Customer..."
+              onSearch={handleSearch}
+            />
+          </div>
+        )}
 
-        {/* Conditionally show loading or data */}
         {loading ? (
           <Loading message="Fetching sales data..." />
         ) : (
@@ -117,5 +117,3 @@ function SalesRecord() {
     </div>
   );
 }
-
-export default SalesRecord;

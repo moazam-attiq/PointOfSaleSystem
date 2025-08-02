@@ -42,6 +42,7 @@ const Cart = ({ cart, setCart, clearCart }) => {
   
       // Store returned order ID (assuming your backend returns it as _id)
       localStorage.setItem("latestOrderId", res.data.orderId);
+      localStorage.setItem("receiptType", "sales");
   
       clearCart();
       navigate("/payment");
@@ -57,7 +58,7 @@ const Cart = ({ cart, setCart, clearCart }) => {
         <button
           style={{ background: "#4682A9" }}
           onClick={() => setVisible(true)}
-          className="fixed bottom-4 right-4 text-white px-4 py-2 rounded shadow mb-2.5"
+          className="fixed bottom-4 right-4 text-white px-4 py-2 rounded shadow mb-2.5 hover:!bg-[#91C8E4]"
         >
           Show Cart
         </button>
@@ -68,15 +69,23 @@ const Cart = ({ cart, setCart, clearCart }) => {
           visible ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <button
-          style={{ background: "#4682A9" }}
-          onClick={() => setVisible(false)}
-          className="absolute top-2 right-2 text-white px-3 py-1 rounded-full shadow"
-        >
-          ❌
-        </button>
+        <div className="flex justify-between items-center mb-4">
 
-        <h2 className="font-bold text-lg mb-3 mt-2">Cart Items</h2>
+          <h2 className="font-bold text-lg mb-3 mt-2">Cart Items</h2>
+        <button
+            onClick={() => setVisible(false)}
+            className="!bg-[#749BC2] !text-white !border-2 border-[#749BC2] w-12 h-12 !flex !items-center !justify-center !rounded-full transition-all duration-200 ease-in-out
+            hover:!text-black hover:!bg-white hover:!border-black active:!text-black active:!border-black focus:!outline-none !leading-none !p-0"
+            >
+            <span
+              className="text-[38px]"
+              style={{ transform: "translateY(-3px)" }}
+              >
+              &times;
+            </span>
+          </button>
+
+        </div>
 
         {cart.length === 0 ? (
           <p className="text-white">Your cart is empty.</p>
@@ -128,14 +137,14 @@ const Cart = ({ cart, setCart, clearCart }) => {
 
         <div className="flex gap-2">
           <button
-            style={{ background: "#91C8E4" }}
+            style={{ background: "#4682A9" }}
             onClick={clearCart}
             className="text-white px-4 py-2 rounded w-1/2"
           >
             Clear Cart
           </button>
           <button
-            style={{ background: "#91C8E4" }}
+            style={{ background: "#4682A9" }}
             onClick={goToProceed}
             className="text-white px-4 py-2 rounded w-1/2"
           >

@@ -70,10 +70,10 @@ export default function AddProductForm() {
           <h2 className="text-2xl font-semibold text-gray-800">Add New Product</h2>
           <button
             onClick={goToHome}
-            className="!bg-white !text-[#749BC2] border-2 border-[#749BC2] w-12 h-12 flex items-center justify-center rounded-full transition-all duration-200 ease-in-out
+            className="!bg-white !text-[#749BC2] !border-2 border-[#749BC2] w-12 h-12 flex items-center justify-center !rounded-full transition-all duration-200 ease-in-out
               hover:!text-black hover:!border-black active:!text-black active:!border-black focus:outline-none leading-none p-0"
           >
-            <span className="text-[30px]" style={{ transform: "translateY(-1px)" }}>
+            <span className="text-[38px]" style={{ transform: "translateY(-3px)" }}>
               &times;
             </span>
           </button>

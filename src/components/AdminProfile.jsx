@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function AdminProfile() {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const navigate = useNavigate();
-  const gotoDashboard = () => {
-    navigate('/dashboard')
+  const goToSignup = () => {
+    navigate('/signup')
   }
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -18,14 +18,28 @@ export default function AdminProfile() {
     navigate('/change-password')
   };
 
-  const handleProceedToDashboard = () => {
+  const goToHome = () => {
     navigate('/dashboard')
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#749BC2] text-black">
       <div className="w-full max-w-sm bg-white p-8 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Admin Profile</h2>
+        <div className='flex justify-between items-center mb-6'>
+        <h2 className="text-2xl font-bold text-center text-gray-800">Admin Profile</h2>
+        <button
+            onClick={goToHome}
+            className="!bg-white !text-[#749BC2] !border-2 border-[#749BC2] w-12 h-12 !flex !items-center !justify-center !rounded-full transition-all duration-200 ease-in-out
+          hover:!text-black hover:!border-black active:!text-black active:!border-black focus:!outline-none !leading-none !p-0"
+          >
+            <span
+              className="text-[38px]"
+              style={{ transform: "translateY(-3px)" }}
+            >
+              &times;
+            </span>
+          </button>
+        </div>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-gray-700 mb-1" htmlFor="name">
@@ -63,15 +77,15 @@ export default function AdminProfile() {
               style={{background:'#749BC2'}}
 
             >
-              Change Password
+              Change your password
             </button>
             <button
               type="button"
-              onClick={handleProceedToDashboard}
+              onClick={goToSignup}
               className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-300"
               style={{background:'#749BC2'}}
             >
-              Proceed To Dashboard
+              Signup new Employee
             </button>
           </div>
         </form>

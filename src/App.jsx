@@ -1,4 +1,5 @@
 import Login from './components/Login'
+import Signup from './components/Signup'
 import ForgetPassword from './components/ForgetPassword'
 import Dashboard from './Dashboard'
 import Receipt from './components/Receipt'
@@ -25,7 +26,7 @@ function App() {
         <Route path = '/edit-product' element={<EditProductForm/>}/>
         <Route path = '/add-product' element={<AddProductForm/>}/>
         <Route path = '/refund' element={<Refund/>}/>
-        
+        <Route path = '/signup' element={<Signup/>}/>        
       </Routes>
     </BrowserRouter>  
 
