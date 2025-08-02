@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import Loading from "../components/Loading"; // Adjust path if needed
 import { useUser } from "../context/UserContext";
+import { useToast } from "../context/ToastContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -10,6 +11,7 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { refetchUser } = useUser();
+  const {showToast} = useToast();
 
 
   const goToForget = () => {
@@ -31,10 +33,11 @@ export default function Login() {
       localStorage.setItem("userRole", userRole);
 
       navigate("/dashboard");
+      showToast("Logged in successful", "success");
       await refetchUser(); // pull latest profile
 
     } catch (error) {
-      alert(error.response?.data?.message || "Login failed");
+      showToast(error.response?.data?.message || "Login failed", "danger");
     } finally {
       setIsLoading(false);
     }

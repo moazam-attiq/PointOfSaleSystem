@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axiosConfig"; // make sure this exists
+import { useToast } from "../context/ToastContext";
 
 const Cart = ({ cart, setCart, clearCart }) => {
   const [visible, setVisible] = useState(false);
   const navigate = useNavigate();
+  const {showToast} = useToast();
 
   const total = cart.reduce(
     (sum, item) => sum + item.resalePrice * item.quantity,
@@ -47,7 +49,7 @@ const Cart = ({ cart, setCart, clearCart }) => {
       clearCart();
       navigate("/payment");
     } catch (error) {
-      alert("❌ Failed to place order: " + (error.response?.data?.message || error.message));
+      showToast("Failed to place order: " + (error.response?.data?.message || error.message), "danger");
     }
   };
   

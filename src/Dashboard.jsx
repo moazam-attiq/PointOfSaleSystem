@@ -12,6 +12,7 @@ import ProductCard from "./components/ProductCard";
 import SearchBar from "./components/SearchBar";
 import Cart from "./components/Cart";
 import Loading from "./components/Loading"; // ✅ import loading
+import EmptyState from "./components/EmptyState";
 
 const menuItems = [
   { label: "Products", key: "products" },
@@ -103,7 +104,7 @@ export default function Dashboard() {
                   />
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {filteredProducts.length === 0 ? (
-                      <EmptyState message="No products match your search." />
+                      <EmptyState message="No products are available in your inventory." />
                     ) : (
                       filteredProducts.map((product, index) => (
                         <ProductCard

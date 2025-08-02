@@ -1,6 +1,7 @@
   import React, { useState, useEffect } from "react";
   import axios from "../api/axiosConfig"; // Your configured Axios instance
   import { useNavigate } from "react-router-dom";
+import { useToast } from "../context/ToastContext";
 
   export default function Refund() {
     const navigate = useNavigate();
@@ -9,6 +10,7 @@
     const [suggestions, setSuggestions] = useState([]);
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [selectedOrderId, setSelectedOrderId] = useState("");
+    const {showToast} = useToast();
     const [refundedCartItems, setRefundedCartItems] = useState([]);
 
     // Fetch suggestions based on searchTerm
@@ -48,10 +50,10 @@
         setSearchTerm(res.data.customerName ?? searchTerm);
       } catch (err) {
         if (err.response && err.response.status === 409) {
-          alert("❌ This order has already been refunded.");
+          showToast("This order has already been refunded", "info")
         } else {
           console.error("Error fetching order data:", err);
-          alert("❌ Failed to fetch order data");
+          showToast("Failed to fetch order data", "danger")
         }
       }
     };
@@ -59,7 +61,7 @@
     const handleSubmit = async () => {
       try {
         if (refundedCartItems.length === 0) {
-          alert("Please select at least one item to refund.");
+          showToast("Please select at least one item to refund", "warning");
           return;
         }
     
@@ -78,7 +80,7 @@
         };
 
         await axios.post("/refunds", refundPayload);
-        alert("Refund recorded successfully");
+        showToast("Refund recorded successfully", "succcess");
     
         // Reset form
         setSearchTerm("");
@@ -90,7 +92,7 @@
         navigate("/dashboard"); // Optional
       } catch (error) {
         console.error("Refund submission failed", error);
-        alert("Something went wrong during refund");
+        showToast("Something went wrong during refund", "danger");
       }
     };
     

@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "../api/axiosConfig"; // Adjust path to your axios instance
+import { useToast } from "../context/ToastContext";
 
 export default function EditProductForm() {
   const navigate = useNavigate();
   const location = useLocation();
+  const {showToast} = useToast();
   const productId = new URLSearchParams(location.search).get("id");
 
   const [product, setProduct] = useState(null);
@@ -22,7 +24,7 @@ export default function EditProductForm() {
         const res = await axios.get(`/products/${productId}`);
         setProduct(res.data);
       } catch (err) {
-        alert("❌ Failed to fetch product: " + err.message);
+        showToast("Failed to fetch product: " + err.message, "danger");
       }
     };
 
@@ -33,12 +35,12 @@ export default function EditProductForm() {
     e.preventDefault();
     if (!product) return;
     if (!product.productName.trim()) {
-      alert("❌ Product name cannot be empty");
+      showToast("Product name cannot be empty", "warning");
       return;
     }
 
     if (addedStock < 0) {
-      alert("❌ Failed to update product. Enter valid stock!");
+      showToast("Failed to update product. Enter valid stock!", "warning");
       return;
     }
     const updatedProduct = {
@@ -50,10 +52,10 @@ export default function EditProductForm() {
 
     try {
       await axios.put(`/products/${product._id}`, updatedProduct);
-      alert("✅ Product updated successfully");
+      showToast("Product updated successfully", "success")
       navigate("/dashboard");
     } catch (err) {
-      alert("❌ Failed to update product: " + err.message);
+      showToast("Failed to update product: " + err.message, "danger")
     }
   };
 

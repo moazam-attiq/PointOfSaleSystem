@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "../api/axiosConfig"; // Axios instance with baseURL
+import axios from "../api/axiosConfig";
+import { useToast } from "../context/ToastContext"; // <-- toast hook
 
 export default function AddProductForm() {
   const navigate = useNavigate();
+  const { showToast } = useToast(); // <-- use toast context
 
   const [form, setForm] = useState({
     productName: "",
     originalPrice: "",
     resalePrice: "",
     stockQuantity: "",
-    productImage: null // optional: not yet handled
+    productImage: null
   });
 
   const handleChange = (e) => {
@@ -24,14 +26,14 @@ export default function AddProductForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const { productName, originalPrice, resalePrice, stockQuantity, productImage } = form;
-  
+
     if (!productName || !originalPrice || !resalePrice || !stockQuantity || !productImage) {
-      alert("⚠️ Please fill all fields and upload an image.");
+      showToast("Please fill all fields and upload an image.", "warning");
       return;
     }
-  
+
     try {
       const formData = new FormData();
       formData.append("productImage", productImage);
@@ -39,12 +41,13 @@ export default function AddProductForm() {
       formData.append("originalPrice", originalPrice);
       formData.append("resalePrice", resalePrice);
       formData.append("stockQuantity", stockQuantity);
-  
-      const res = await axios.post("/products", formData, {
+
+      await axios.post("/products", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-  
-      alert("✅ Product added successfully!");
+
+      showToast("Product added successfully!", "success");
+
       setForm({
         productName: "",
         originalPrice: "",
@@ -52,12 +55,15 @@ export default function AddProductForm() {
         stockQuantity: "",
         productImage: null,
       });
+
       goToHome();
     } catch (error) {
-      alert("❌ Failed to add product: " + (error.response?.data?.message || error.message));
+      showToast(
+        "Failed to add product: " + (error.response?.data?.message || error.message),
+        "danger"
+      );
     }
   };
-  
 
   const goToHome = () => {
     navigate("/dashboard");
@@ -82,7 +88,7 @@ export default function AddProductForm() {
         <form onSubmit={handleSubmit} className="space-y-4 text-black">
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">
-              Product Image (Not yet uploaded)
+              Product Image
             </label>
             <input
               name="productImage"

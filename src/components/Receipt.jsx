@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axiosConfig";
+import { useToast } from "../context/ToastContext";
 
 const Receipt = () => {
   const [order, setOrder] = useState(null);
   const [payment, setPayment] = useState(null);
   const [refund, setRefund] = useState(null);
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const goToDashboard = () => {
     localStorage.removeItem("latestOrderId");
@@ -22,7 +24,7 @@ const Receipt = () => {
       try {
         if (type === "refund") {
           const refundId = localStorage.getItem("latestRefundId");
-          if (!refundId) return alert("❌ No refund ID found.");
+          if (!refundId) return showToast("No refund ID found", "danger");
 
           const res = await axios.get(`/refunds/${refundId}`);
           setRefund(res.data);
@@ -33,7 +35,7 @@ const Receipt = () => {
           setPayment(paymentRes.data);
         } else {
           const orderId = localStorage.getItem("latestOrderId");
-          if (!orderId) return alert("❌ No order ID found.");
+          if (!refundId) return showToast("No order ID found", "danger");
 
           const [orderRes, paymentRes] = await Promise.all([
             axios.get(`/orders/${orderId}`),
@@ -43,10 +45,12 @@ const Receipt = () => {
           setPayment(paymentRes.data);
         }
       } catch (err) {
-        alert(
-          "❌ Error fetching receipt data: " +
-            (err.response?.data?.message || err.message)
-        );
+        if (!refundId)
+          return showToast(
+            "Error fetching receipt data: " +
+              (err.response?.data?.message || err.message),
+            "danger"
+          );
       }
     };
 

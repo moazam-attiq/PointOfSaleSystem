@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axiosConfig";
+import { useToast } from "../context/ToastContext";
 
 const OrderPayment = () => {
   const [customerName, setCustomerName] = useState("");
@@ -8,6 +9,7 @@ const OrderPayment = () => {
   const [amountReceived, setAmountReceived] = useState("");
   const [billAmount, setBillAmount] = useState(0); // From order
   const navigate = useNavigate();
+  const {showToast} = useToast();
 
   const orderId = localStorage.getItem("latestOrderId");
 
@@ -20,7 +22,7 @@ const OrderPayment = () => {
         const res = await axios.get(`/orders/${orderId}`);
         setBillAmount(res.data.totalAmount);
       } catch (err) {
-        alert("❌ Failed to fetch order details.");
+        showToast("Failed to fetch order details.", "danger");
       }
     };
 
@@ -31,7 +33,7 @@ const OrderPayment = () => {
     e.preventDefault();
 
     if (!orderId) {
-      alert("❌ Order ID missing. Cannot proceed with payment.");
+      showToast("Order ID missing. Cannot proceed with payment.", "danger");
       return;
     }
 
@@ -39,7 +41,7 @@ const OrderPayment = () => {
     const change = received - billAmount;
 
     if (received < billAmount) {
-      alert("⚠️ Amount received is less than bill total.");
+      showToast("Amount received is less than bill total.", "warning")
       return;
     }
 
@@ -54,13 +56,11 @@ const OrderPayment = () => {
       };
 
       await axios.post("/payments", paymentData);
-      alert("✅ Payment successful!");
+      showToast("Payment successful!", "success")
       navigate("/receipt");
     } catch (err) {
-      alert(
-        "❌ Failed to record payment: " +
-          (err.response?.data?.message || err.message)
-      );
+      showToast("Failed to record payment: " +
+      (err.response?.data?.message || err.message), "danger");
     }
   };
 
@@ -133,7 +133,7 @@ const OrderPayment = () => {
               }}
               onBlur={() => {
                 if (mobileNumber.length !== 11) {
-                  alert("Please enter a valid mobile number");
+                  showToast("Please enter a valid mobile number", 'warning')
                   setMobileNumber();
                 }
               }}

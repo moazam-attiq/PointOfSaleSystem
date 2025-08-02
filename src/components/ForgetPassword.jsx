@@ -1,17 +1,20 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axiosConfig";
+import { useToast } from "../context/ToastContext";
 
 export default function ForgetPassword() {
   const [email, setEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
+  const {showToast} = useToast();
+
   const handleReset = async (e) => {
     e.preventDefault();
   
     if (newPassword !== confirmPassword) {
-      alert("Passwords do not match");
+      showToast("Passwords do not match", "warning");
       return;
     }
   
@@ -21,11 +24,11 @@ export default function ForgetPassword() {
         newPassword
       });
   
-      alert(data.message || "Password reset successfully");
+      showToast(data.message || "Password reset successfully", "success")
       goToLogin();
     } catch (error) {
       console.error("Reset failed", error);
-      alert(error?.response?.data?.message || "Something went wrong");
+      showToast(error?.response?.data?.message || "Something went wrong", "danger")
     }
   };
 

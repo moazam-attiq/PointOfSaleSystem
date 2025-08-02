@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axiosConfig";
+import { useToast } from "../context/ToastContext";
 
 export default function Signup() {
   const [name, setName] = useState("");
@@ -8,6 +9,7 @@ export default function Signup() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const {showToast} = useToast();
 
   const goToProfile = () => {
     navigate("/admin-profile");
@@ -22,7 +24,7 @@ export default function Signup() {
         password,
       });
 
-      alert("New Employee was registered successfully!");
+      showToast("New Employee was registered successfully", "400")  
       navigate("/admin-profile");
     } catch (err) {
       console.error("Signup Failed:", err.response?.data?.message || err.message);

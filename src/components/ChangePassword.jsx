@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "../api/axiosConfig"; // your configured Axios instance
 import { useUser } from "../context/UserContext";
 import Loading from "./Loading";
+import { useToast } from "../context/ToastContext";
 
 export default function ChangePassword() {
   const [newPassword, setNewPassword] = useState("");
@@ -10,6 +11,7 @@ export default function ChangePassword() {
   const [oldPassword, setOldPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const { user, loadingUser } = useUser();
+  const {showToast} = useToast();
   
   const navigate = useNavigate();
   
@@ -21,7 +23,7 @@ export default function ChangePassword() {
     e.preventDefault();
 
     if (newPassword !== confirmPassword) {
-      alert("Passwords do not match");
+      showToast("Passwords do not match", "warning")
       return;
     }
 
@@ -34,15 +36,13 @@ export default function ChangePassword() {
         newPassword,
       });
 
-      alert("Password changed successfully");
+      showToast("Password changed successfully", "success")
       navigate("/"); 
       localStorage.clear();
     } catch (error) {
       console.error("Error changing password", error);
-      alert(
-        error?.response?.data?.message ||
-        "Failed to change password. Please try again."
-      );
+      showToast(error?.response?.data?.message ||
+      "Failed to change password. Please try again.","danger")
     } finally {
       setLoading(false);
     }
