@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "../api/axiosConfig"; // make sure this exists
 
 const Cart = ({ cart, setCart, clearCart }) => {
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
   const navigate = useNavigate();
 
   const total = cart.reduce(
@@ -106,14 +106,14 @@ const Cart = ({ cart, setCart, clearCart }) => {
                   <div className="flex items-center gap-2 mt-1">
                     <button
                       onClick={() => decreaseQty(item._id)}
-                      className="!bg-[#749BC2] text-white w-6 h-6 text-sm rounded-full flex items-center justify-center"
+                      className="!bg-white text-[#749BC2] w-6 h-6 text-sm rounded-full flex items-center justify-center"
                     >
                       −
                     </button>
                     <span className="text-sm">{item.quantity}</span>
                     <button
                       onClick={() => increaseQty(item._id)}
-                      className="!bg-[#749BC2] text-white w-6 h-6 text-sm rounded-full flex items-center justify-center"
+                      className="!bg-white text-[#749BC2] w-6 h-6 text-sm rounded-full flex items-center justify-center"
                     >
                       +
                     </button>
@@ -123,9 +123,9 @@ const Cart = ({ cart, setCart, clearCart }) => {
                   <p>Rs. {item.resalePrice * item.quantity}</p>
                   <button
                     onClick={() => removeItem(item._id)}
-                    className="!bg-[#749BC2] text-white w-6 h-6 text-xs rounded-full flex items-center justify-center mt-2"
+                    className="!bg-white text-[#749BC2] w-6 h-6 text-xs rounded-full flex items-center justify-center mt-2"
                   >
-                    X
+                    &times;
                   </button>
                 </div>
               </li>

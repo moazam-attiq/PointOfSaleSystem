@@ -60,7 +60,7 @@ export default function AddProductForm() {
   
 
   const goToHome = () => {
-    navigate("/Dashboard");
+    navigate("/dashboard");
   };
 
   return (
