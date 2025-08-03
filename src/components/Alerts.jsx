@@ -29,7 +29,7 @@ export default function Alerts() {
   }, []);
 
   const restock = (product) => {
-    navigate(`/edit-product?id=${product._id}`);
+    navigate(`/edit-product?id=${product._id}&headerText=Restock%20Product`);
   };
 
   const getBadge = (stock) => {

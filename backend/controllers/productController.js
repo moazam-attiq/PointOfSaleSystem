@@ -10,6 +10,14 @@ const createProduct = async (req, res) => {
     const { productName, originalPrice, resalePrice, stockQuantity } = req.body;
     const imageUrl = req.file ? `/uploads/${req.file.filename}` : "";
 
+    const existingProduct = await Product.findOne({
+      productName: { $regex: new RegExp(`^${productName}$`, 'i') }
+    });
+
+    if (existingProduct) {
+      return res.status(400).json({message: "Product with this name already exists."})
+    }
+
     const product = new Product({
       productName,
       originalPrice,
@@ -27,7 +35,7 @@ const createProduct = async (req, res) => {
 
 const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find();
+    const products = await Product.find({stockQuantity: {$gt: 0}});
     res.json(products);
   } catch (err) {
     res.status(500).json({ message: err.message });

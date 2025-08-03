@@ -27,6 +27,11 @@ export default function ChangePassword() {
       return;
     }
 
+    if (newPassword === oldPassword) {
+      showToast("New password can not be same as old one.", "warning")
+      return;
+    }
+    
     try {
       setLoading(true);
 

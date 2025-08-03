@@ -129,7 +129,7 @@ export default function InventoryDashboard() {
                             style={{ background: "#91C8E4" }}
                             className="px-4 py-2 text-sm font-bold rounded text-white"
                             onClick={() =>
-                              navigate(`/edit-product?id=${item._id}`)
+                              navigate(`/edit-product?id=${item._id}&headerText=Edit%20Product`)
                             }
                           >
                             Edit

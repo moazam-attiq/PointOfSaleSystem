@@ -39,7 +39,7 @@ export default function AddProductForm() {
       formData.append("productImage", productImage);
       formData.append("productName", productName);
       formData.append("originalPrice", originalPrice);
-      formData.append("resalePrice", resalePrice);
+      formData.append("resalePrice", resalePrice);  
       formData.append("stockQuantity", stockQuantity);
 
       await axios.post("/products", formData, {

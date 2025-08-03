@@ -8,6 +8,7 @@ export default function EditProductForm() {
   const location = useLocation();
   const {showToast} = useToast();
   const productId = new URLSearchParams(location.search).get("id");
+  const headerText = new URLSearchParams(location.search).get("headerText");
 
   const [product, setProduct] = useState(null);
   const [addedStock, setAddedStock] = useState("");
@@ -69,7 +70,7 @@ export default function EditProductForm() {
     <div className="flex items-center justify-center min-h-screen bg-[#749BC2]">
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold text-gray-800">Edit Product</h2>
+          <h2 className="text-2xl font-semibold text-gray-800">{headerText}</h2>
           <button
             onClick={goToHome}
             className="!bg-white !text-[#749BC2] !border-2 border-[#749BC2] w-12 h-12 flex items-center justify-center !rounded-full transition-all duration-200 ease-in-out
