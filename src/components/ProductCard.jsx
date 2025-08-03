@@ -10,6 +10,10 @@ export default function ProductCard({ product, buttonText, onButtonClick }) {
           className="w-full h-full object-cover rounded-2xl"
           src={`http://localhost:5000${product.image}`}
           alt={product.productName || "Product Image"}
+          onError={(e) => {
+            e.target.onerror = null; // prevent infinite loop
+            e.target.src = "http://localhost:5000/defaults/default-product.png";
+          }}
         />
       </div>
 
