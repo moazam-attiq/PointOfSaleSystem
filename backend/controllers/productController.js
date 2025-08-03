@@ -8,14 +8,18 @@ const fs = require("fs").promises; // use promises version for await
 const createProduct = async (req, res) => {
   try {
     const { productName, originalPrice, resalePrice, stockQuantity } = req.body;
-    const imageUrl = req.file ? `/uploads/${req.file.filename}` : "";
+    const imageUrl = req.file 
+    ? `/uploads/${req.file.filename}` 
+    : `/defaults/default-product.png`;
 
     const existingProduct = await Product.findOne({
-      productName: { $regex: new RegExp(`^${productName}$`, 'i') }
+      productName: { $regex: new RegExp(`^${productName}$`, "i") },
     });
 
     if (existingProduct) {
-      return res.status(400).json({message: "Product with this name already exists."})
+      return res
+        .status(400)
+        .json({ message: "Product with this name already exists." });
     }
 
     const product = new Product({
@@ -35,7 +39,9 @@ const createProduct = async (req, res) => {
 
 const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find({stockQuantity: {$gt: 0}});
+    const products = await Product.find({ stockQuantity: { $gt: 0 } }).sort({
+      productName: 1,
+    });
     res.json(products);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -74,6 +80,7 @@ const getInventoryStats = async (req, res) => {
         image: product.image,
       };
     });
+    result.sort((a, b) => a.name.localeCompare(b.name));
 
     res.status(200).json(result);
   } catch (err) {
@@ -144,10 +151,11 @@ const deleteProductById = async (req, res) => {
 
     res.status(200).json({ message: "Product deleted successfully" });
   } catch (err) {
-    res.status(500).json({ message: "Failed to delete product", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Failed to delete product", error: err.message });
   }
 };
-
 
 const getInventoryStatus = async (req, res) => {
   try {
@@ -169,9 +177,6 @@ const getInventoryStatus = async (req, res) => {
     });
   }
 };
-
-
-
 
 module.exports = {
   createProduct,

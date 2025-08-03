@@ -1,7 +1,6 @@
 import React from "react";
 
 export default function ProductCard({ product, buttonText, onButtonClick }) {
-
   return (
     <div className="w-full bg-gray-100 text-black rounded-3xl shadow-xl border border-gray-200 flex flex-col justify-between">
       {/* Image Section */}
@@ -9,11 +8,7 @@ export default function ProductCard({ product, buttonText, onButtonClick }) {
       <div className="w-full h-40 sm:h-48 md:h-52 lg:h-56 p-3 flex justify-center items-center">
         <img
           className="w-full h-full object-cover rounded-2xl"
-          src={
-            product.image?.startsWith("http")
-              ? product.image
-              : `http://localhost:5000${product.image}`
-          }
+          src={`http://localhost:5000${product.image}`}
           alt={product.productName || "Product Image"}
         />
       </div>

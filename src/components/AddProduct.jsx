@@ -29,8 +29,8 @@ export default function AddProductForm() {
 
     const { productName, originalPrice, resalePrice, stockQuantity, productImage } = form;
 
-    if (!productName || !originalPrice || !resalePrice || !stockQuantity || !productImage) {
-      showToast("Please fill all fields and upload an image.", "warning");
+    if (!productName || !originalPrice || !resalePrice || !stockQuantity) {
+      showToast("Please fill all fields.", "warning");
       return;
     }
 

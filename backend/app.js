@@ -23,6 +23,7 @@ app.use('/api/users', require('./routes/userRoutes'));
 
 // ✅ Static Assets (uploads)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/defaults', express.static(path.join(__dirname, '..', 'public', 'defaults')));
 
 // ✅ 404 fallback (optional)
 app.use((req, res, next) => {
