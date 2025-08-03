@@ -14,7 +14,7 @@ export default function InventoryDashboard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const {showToast} = useToast();
+  const { showToast } = useToast();
 
   useEffect(() => {
     const fetchInventory = async () => {
@@ -137,20 +137,22 @@ export default function InventoryDashboard() {
                           <button
                             style={{ background: "#91C8E4" }}
                             className="px-4 py-2 text-sm font-bold rounded text-white"
-                            onClick={() => {setShowModal(true) 
-                              setSelectedProductId(item._id)}}
+                            onClick={() => {
+                              setShowModal(true);
+                              setSelectedProductId(item._id);
+                            }}
                           >
                             Delete
                           </button>
                         </td>
                       </tr>
                     ))
-                    )}
-                    <DeleteModal
+                  )}
+                  <DeleteModal
                     show={showModal}
                     onClose={() => setShowModal(false)}
                     onConfirm={() => handleDeleteProduct(selectedProductId)}
-                    />
+                  />
                 </tbody>
               </table>
             </div>

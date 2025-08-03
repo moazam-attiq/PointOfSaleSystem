@@ -6,7 +6,7 @@ import { useToast } from "../context/ToastContext";
 const Receipt = () => {
   const [order, setOrder] = useState(null);
   const [payment, setPayment] = useState(null);
-  const [refund, setRefund] = useState(null);
+  const [refund, setRefund] = useState(false);
   const navigate = useNavigate();
   const { showToast } = useToast();
 
@@ -35,7 +35,7 @@ const Receipt = () => {
           setPayment(paymentRes.data);
         } else {
           const orderId = localStorage.getItem("latestOrderId");
-          if (!refundId) return showToast("No order ID found", "danger");
+          if (!orderId) return showToast("No order ID found", "danger");
 
           const [orderRes, paymentRes] = await Promise.all([
             axios.get(`/orders/${orderId}`),
@@ -45,7 +45,6 @@ const Receipt = () => {
           setPayment(paymentRes.data);
         }
       } catch (err) {
-        if (!refundId)
           return showToast(
             "Error fetching receipt data: " +
               (err.response?.data?.message || err.message),

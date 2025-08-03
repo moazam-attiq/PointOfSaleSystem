@@ -121,9 +121,9 @@ const OrderPayment = () => {
               Mobile Number
             </label>
             <input
-              type="text"
+              type="tel"
               inputMode="numeric"
-              pattern="0-9"
+              pattern="\d{11}"
               value={mobileNumber}
               onChange={(e) => {
                 const value = e.target.value;
@@ -134,7 +134,6 @@ const OrderPayment = () => {
               onBlur={() => {
                 if (mobileNumber.length !== 11) {
                   showToast("Please enter a valid mobile number", 'warning')
-                  setMobileNumber();
                 }
               }}
               placeholder="Enter customer mobile number"

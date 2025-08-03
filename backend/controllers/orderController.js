@@ -1,5 +1,5 @@
-const Order = require('../models/Order');
-const Product = require('../models/Inventory');
+const Order = require("../models/Order");
+const Product = require("../models/Inventory");
 
 // Helper: Generate a unique order number
 const generateOrderNumber = () => {
@@ -58,7 +58,6 @@ const createOrder = async (req, res) => {
       message: "Order placed successfully.",
       orderId: savedOrder._id,
     });
-
   } catch (err) {
     console.error("❌ Error creating order:", err);
     res.status(500).json({ message: "Internal server error." });
@@ -67,7 +66,7 @@ const createOrder = async (req, res) => {
 
 const getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find().populate('cartItems.productId');
+    const orders = await Order.find().populate("cartItems.productId");
     res.json(orders);
   } catch (err) {
     res.status(500).json({ message: err.message });

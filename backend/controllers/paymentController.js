@@ -3,7 +3,8 @@ const Order = require("../models/Order");
 
 const createPayment = async (req, res) => {
   try {
-    const { orderId, customerName, mobileNumber, billAmount, amountReceived } = req.body;
+    const { orderId, customerName, mobileNumber, billAmount, amountReceived } =
+      req.body;
 
     const changeGiven = amountReceived - billAmount;
 
@@ -22,7 +23,6 @@ const createPayment = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 
 const getAllPayments = async (req, res) => {
   try {
@@ -48,8 +48,10 @@ const getSalesRecord = async (req, res) => {
     const orders = await Order.find();
     const payments = await Payment.find();
 
-    const merged = orders.map(order => {
-      const payment = payments.find(p => p.orderId.toString() === order._id.toString());
+    const merged = orders.map((order) => {
+      const payment = payments.find(
+        (p) => p.orderId.toString() === order._id.toString()
+      );
 
       const due = payment ? payment.amountReceived - payment.billAmount : 0;
       const change = payment?.amountReceived - payment?.billAmount;
@@ -70,9 +72,15 @@ const getSalesRecord = async (req, res) => {
     res.json(merged);
   } catch (error) {
     console.error("❌ getSalesRecord error:", error.message);
-    res.status(500).json({ message: "Failed to get sales record", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Failed to get sales record", error: error.message });
   }
 };
 
-
-module.exports = { createPayment, getAllPayments, getPaymentByOrderId, getSalesRecord };
+module.exports = {
+  createPayment,
+  getAllPayments,
+  getPaymentByOrderId,
+  getSalesRecord,
+};
