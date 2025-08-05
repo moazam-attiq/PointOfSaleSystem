@@ -47,16 +47,19 @@ const getSalesRecord = async (req, res) => {
   try {
     const orders = await Order.find();
     const payments = await Payment.find();
+    const merged = [];
 
-    const merged = orders.map((order) => {
+    for (const order of orders) {
       const payment = payments.find(
         (p) => p.orderId.toString() === order._id.toString()
       );
 
+      if (!payment) continue;
+
       const due = payment ? payment.amountReceived - payment.billAmount : 0;
       const change = payment?.amountReceived - payment?.billAmount;
 
-      return {
+      merged.push ({
         orderId: order._id,
         orderNumber: order.orderNumber,
         date: payment?.paymentDate.toLocaleDateString("en-US") || "N/A",
@@ -66,8 +69,8 @@ const getSalesRecord = async (req, res) => {
         paidAmount: payment?.amountReceived || 0,
         due: Math.abs(due),
         change: change || 0,
-      };
-    });
+      });
+    };
 
     res.json(merged);
   } catch (error) {
